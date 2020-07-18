@@ -1,0 +1,55 @@
+spring:
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+    default-property-inclusion: non_null
+    time-zone: UTC
+    serialization:
+      WRITE_DATES_AS_TIMESTAMPS: false
+  datasource:
+    #    driverClassName: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/polls?useSSL=false&characterEncoding=UTF-8
+    username: root
+    password: user@123
+    dialect: org.hibernate.dialect.MySQL5InnoDBDialect # The SQL dialect makes Hibernate generate better SQL for the chosen database
+    validationQuery: SELECT 1
+    testOnBorrow: true
+    initialSize: 10
+    minIdle: 10
+    maxActive: 100
+    maxIdle: 100
+    initialization-mode: always # Initialize the datasource with available DDL and DML scripts
+  jpa:
+    #    generate-ddl: false #whether to initialize schema on startup
+    hibernate:
+      ddl-auto: update  #automatically create/update the tables in the database according to the entities in our application
+        #  batch:
+        #    size: 20
+        #current:
+        #  session:
+        #    context:
+        #      class: org.springframework.orm.hibernate5.SpringSessionContext
+        #        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+      #storage: innodb
+#    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    #naming:
+    #  physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    #mode: validate
+
+logging:
+  file: /home/mrwhite/Java/polls/logs/polls.log
+  level:
+    web: DEBUG
+    com:
+      mrwhite: DEBUG
+    org:
+      hibernate:
+        SQL: debug
+      springframework: ERROR
+  #        web: INFO
+  #        web.filter.CommonsRequestLoggingFilter: DEBUG
+  #        cache: INFO
+  pattern:
+    level: '[requestId: %X{requestId}] %5p:%L'
