@@ -1,6 +1,7 @@
 package com.mrwhite.polls.Security;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.mrwhite.polls.Entity.db.Role;
 import com.mrwhite.polls.Entity.db.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

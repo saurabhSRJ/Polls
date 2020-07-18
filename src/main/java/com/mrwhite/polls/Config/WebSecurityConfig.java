@@ -31,6 +31,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .userDetailsService(customUserDetailsService)
                 .passwordEncoder(passwordEncoder());
     }
+    //AuthenticationManagerBuilder is used to create an AuthenticationManager. Allows for easily building in memory authentication, LDAP authentication,
+    // JDBC based authentication,adding UserDetailsService, and adding AuthenticationProvider's
+    //AuthenticationManager Attempts to authenticate the passed {@link Authentication} object, returning a
+    //* fully populated <code>Authentication</code> object (including granted authorities) if successful
 
     @Bean(BeanIds.AUTHENTICATION_MANAGER)
     @Override
@@ -50,10 +54,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception{
+        //by default Spring Security protects any incoming POST (or PUT/DELETE/PATCH) request with a valid CSRF token
         http.csrf().disable()
                 .exceptionHandling().authenticationEntryPoint(authenticationExceptionFilter)
                 .and().authorizeRequests()
                 .antMatchers("/api/auth/**").permitAll()
-                .anyRequest().authenticated();
+                .anyRequest().authenticated()
+                .and().httpBasic();
     }
+    //httpBasic will check for Authorization: Basic in secured endpoints to check for valid credentials.
+    //This extraction will be automatic.
 }

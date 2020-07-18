@@ -27,7 +27,7 @@ public class AuthService {
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-    public AuthService(AuthenticationManager authenticationManager, UserRepository userRepository, PasswordEncoder passwordEncoder){
+    public AuthService(AuthenticationManager authenticationManager,UserRepository userRepository, PasswordEncoder passwordEncoder){
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
@@ -37,6 +37,8 @@ public class AuthService {
         try {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(loginRequest.getUsernameOrEmail(),loginRequest.getPassword()));
+
+//            UsernamePasswordAuthenticationToken is an implementation of Authentication interface
             SecurityContextHolder.getContext().setAuthentication(authentication);
             ApiResponse apiResponse = new ApiResponse();
             apiResponse.setSuccess(Boolean.TRUE);

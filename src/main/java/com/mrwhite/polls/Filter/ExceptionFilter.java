@@ -20,10 +20,6 @@ public class ExceptionFilter {
             String errorResponse = ex.getMessage();
             return ResponseEntity.status(httpStatus).body(errorResponse);
         }
-        else if(ex instanceof ServletException){
-            String errorResponse = ex.getMessage();
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
-        }
         else {
             throw ex;
         }
