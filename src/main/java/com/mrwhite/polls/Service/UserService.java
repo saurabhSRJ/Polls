@@ -79,6 +79,7 @@ public class UserService {
             log.error("user does not exist with id: " + id);
             throw new PollException(PollErrorCode.NOT_FOUND,"user does not exist with given id");
         }
+
         user.setEmail(userRequest.getEmail());
         user.setName(userRequest.getName());
         user.setUsername(userRequest.getUsername());
@@ -98,6 +99,7 @@ public class UserService {
             throw new PollException(PollErrorCode.NOT_FOUND,"user does not exist with given id");
         }
         user.setDeleted(id);
+        userRoleMappingRepository.deleteByUserId(id);
         UserResponse userResponse = new UserResponse();
         userResponse.setSuccess(Boolean.TRUE);
         userResponse.setMessage("User successfully deleted");

@@ -5,6 +5,7 @@ import lombok.Data;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Data
@@ -12,12 +13,13 @@ import java.util.List;
 public class RoleRequestBulk{
     @Valid
     @NotEmpty
-    private List<RoleRequest> roleRequests;
+    private List<RoleRequest> roleRequestList;
 
     @Data
     @Builder
     public static class RoleRequest{
         private Long id;
-        private String name;
+        @NotNull
+        private String roleName;
     }
 }

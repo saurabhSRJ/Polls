@@ -53,3 +53,8 @@ logging:
   #        cache: INFO
   pattern:
     level: '[requestId: %X{requestId}] %5p:%L'
+
+
+app:
+  jwtSecret: JWTSuperSecretKey
+  jwtExpirationInMs: 300000

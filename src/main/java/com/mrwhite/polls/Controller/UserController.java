@@ -15,11 +15,11 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/user")
+@RequestMapping(value = "/api/user")
 @Slf4j
 @Validated
 public class UserController {
-    UserService userService;
+    private UserService userService;
     @Autowired
     public UserController(UserService userService){
         this.userService = userService;

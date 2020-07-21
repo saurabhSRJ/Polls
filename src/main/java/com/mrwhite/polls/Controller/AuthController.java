@@ -2,7 +2,7 @@ package com.mrwhite.polls.Controller;
 
 import com.mrwhite.polls.Entity.Controller.Request.LoginRequest;
 import com.mrwhite.polls.Entity.Controller.Request.SignUpRequest;
-import com.mrwhite.polls.Entity.Controller.Response.ApiResponse;
+import com.mrwhite.polls.Entity.Controller.Response.JwtAuthenticationResponse;
 import com.mrwhite.polls.Entity.Controller.Response.UserResponse;
 import com.mrwhite.polls.Exception.PollException;
 import com.mrwhite.polls.Service.AuthService;
@@ -24,7 +24,7 @@ public class AuthController {
     }
 
     @GetMapping(value = "/signin")
-    public ApiResponse authenticateUser(@Valid @RequestBody LoginRequest loginRequest) throws PollException{
+    public JwtAuthenticationResponse authenticateUser(@Valid @RequestBody LoginRequest loginRequest) throws PollException{
         return authService.authenticateUser(loginRequest);
     }
 

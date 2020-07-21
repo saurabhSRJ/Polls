@@ -2,6 +2,7 @@ package com.mrwhite.polls.Exception;
 
 import lombok.Getter;
 import lombok.ToString;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 @ToString
 public class PollException extends Exception {

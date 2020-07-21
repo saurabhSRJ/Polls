@@ -3,8 +3,10 @@ package com.mrwhite.polls.Security;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.mrwhite.polls.Entity.db.Role;
 import com.mrwhite.polls.Entity.db.User;
+import com.mrwhite.polls.Service.RoleService;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -25,10 +27,8 @@ public class CustomUserDetails implements UserDetails {
     private String password;
     private Collection<? extends GrantedAuthority> authorities;
 
-    public static CustomUserDetails create(User user){
-        List<String> roleList = new ArrayList<String>();
-        roleList.add("ROLE_DEFAULT");
-        List<GrantedAuthority> authorities = roleList.stream().map(s->new SimpleGrantedAuthority(s)).collect(Collectors.toList());
+    public static CustomUserDetails create(User user, List<Role> roleList){
+        List<GrantedAuthority> authorities = roleList.stream().map(s->new SimpleGrantedAuthority(s.getRoleName())).collect(Collectors.toList());
         return new CustomUserDetails(user.getId(),user.getName(),user.getEmail(),user.getUsername(),user.getPassword(),authorities);
     }
 

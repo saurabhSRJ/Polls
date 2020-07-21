@@ -5,11 +5,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotNull;
+
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class RoleResponse extends ApiResponse {
-    private Long id;
-    private String roleName;
+public class JwtAuthenticationResponse {
+    @NotNull
+    private String token;
 }

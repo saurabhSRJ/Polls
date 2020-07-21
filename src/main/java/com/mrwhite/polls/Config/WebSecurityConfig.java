@@ -2,21 +2,30 @@ package com.mrwhite.polls.Config;
 
 import com.mrwhite.polls.Filter.AuthenticationExceptionFilter;
 import com.mrwhite.polls.Security.CustomUserDetailsService;
+import com.mrwhite.polls.Security.JwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(
+        securedEnabled = true,
+        jsr250Enabled = true,
+        prePostEnabled = true
+)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
@@ -25,10 +34,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private AuthenticationExceptionFilter authenticationExceptionFilter;
 
+    @Autowired
+    private JwtAuthenticationFilter jwtAuthenticationFilter;
+
     @Override
     public void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
         authenticationManagerBuilder
-                .userDetailsService(customUserDetailsService)
+                .userDetailsService(userDetailsService())
                 .passwordEncoder(passwordEncoder());
     }
     //AuthenticationManagerBuilder is used to create an AuthenticationManager. Allows for easily building in memory authentication, LDAP authentication,
@@ -44,7 +56,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public PasswordEncoder passwordEncoder(){
-        return new BCryptPasswordEncoder();
+        return new BCryptPasswordEncoder(12);
     }
 
     @Bean
@@ -52,16 +64,21 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return customUserDetailsService;
     }
 
+
     @Override
     protected void configure(HttpSecurity http) throws Exception{
         //by default Spring Security protects any incoming POST (or PUT/DELETE/PATCH) request with a valid CSRF token
         http.csrf().disable()
                 .exceptionHandling().authenticationEntryPoint(authenticationExceptionFilter)
+                .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().authorizeRequests()
                 .antMatchers("/api/auth/**").permitAll()
-                .anyRequest().authenticated()
-                .and().httpBasic();
+                .anyRequest().authenticated();
+
+        // No session will be created or used by spring security
+        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
+//        http.logout().clearAuthentication(true).invalidateHttpSession(false);
+        http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
     }
-    //httpBasic will check for Authorization: Basic in secured endpoints to check for valid credentials.
-    //This extraction will be automatic.
 }
